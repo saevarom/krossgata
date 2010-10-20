@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAbDsq1WKNoROj-ZGyqQ4o0hRE5teG-u3U1FFRhnuyaKFH_tUAWBTDzV35JQzVwPKq8tpp1xHwJN3vAw"></script>
+        <script type="text/javascript">google.load("jquery", "1.4.2");</script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var $spinner = $('#spinner');
+                jQuery.fn.no_spam=function(){return this.each(function(){var a=$(this),c=a.text().replace(/\s*\[h\]\s*/,"@").replace(/\s*\[p\]\s*/g,".");c=c.split("|");var b=c[0],e="";e=c.length==2?c[1]:b;a.html('<a href="mailto:'+b+'">'+e+"</a>")})};
+                $('#search').bind({
+                    click: function() {
+                        $spinner.show();
+                        $.post('/', {
+                                regex: $('#regex').val(),
+                                perms: $('#perms').val()
+                            }, function(data){
+                                $results = $('#results').html('');
+                                if(data.perms) {
+                                    //console.log(data.perms)
+                                    if(data.perms.errors.length>0) {
+                                        alert(data.perms.errors);
+                                    }
+                                    $ul1 = $('<ul id="perms_results" />');
+                                    $.each(data.perms.matches, function(i, el){
+                                        var $li = $('<li />').text(el)
+                                            .appendTo($ul1);
+                                    });
+                                    $ul1.appendTo($results);
+                                }
+                                if(data.regex) {
+                                    //console.log(data.regex)
+                                    if(data.regex.errors.length>0) {
+                                        alert(data.regex.errors);
+                                    }
+                                    $ul2 = $('<ul id="regex_results" />');
+                                    $.each(data.regex.matches, function(i, el){
+                                        var $li = $('<li />').text(el)
+                                            .appendTo($ul2);
+                                    });
+                                    $ul2.appendTo($results);
+                                }
+                                $spinner.hide();
+                        }, 'json');
+                    }
+                });
+                $('.nsp').no_spam();
+            });
+
+
+        </script>
+        <style type="text/css">
+            dt {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+<body>
+    <h1>Krossgátuleit</h1>
+    <p>Krossgátuleitin býður upp á tvær mismunandi tegundir af leit:</p>
+    <dl>
+        <dt>Orðhlutaleit</dt>
+        <dd>Leitarvélin þarf að fá leitarorð sem er sama lengd og orðið sem leitað er að. Ef einhverjir stafir eða orðhlutar í orðinu eru óþekktir þarf að fylla upp í með punktum. Til dæmis finnur leitarorðið "fó.ur" orðin fóður, fórur og fótur. Leitarorðið ".." finnur öll tveggja stafa orð í orðalistanum.</dd>
+        <dt>Stafarugl</dt>
+        <dd>Leitarvélin þarf að fá alla stafi orðsins, í hvaða röð sem er. Til dæmis finnur leitarorðið "rðiuf" orðin fiður, fuðri og rifuð. Af tæknilegum ástæðum er ekki hægt að finna stafarugl sem er lengra en 6 stafir.</dd>
+    </dl>
+    <p>Orðalisti fenginn á: <a href="http://elias.rhi.hi.is/pub/is/ordalisti">http://elias.rhi.hi.is/pub/is/ordalisti</a></p>
+
+    <div>
+    <p>Orðaleit: <input type="text" id="regex" name="regex" /> "fó.ur" finnur fóður, fórur og fótur. ".." Finnur öll tveggja stafa orð.</p>
+    <p>Stafarugl: <input type="text" id="perms" name="perms" /> "rðiuf" finnur fiður, fuðri og rifuð.</p>
+    <p><input type="submit" id="search" value="Leita" /> <img id="spinner" src="images/ajax.gif" style="display:none;" /></p>
+    </form>
+    <div id="results"></div>
+    </div>
+    <hr />
+    <div>Höfundur: Sævar Öfjörð Magnússon <<span class="nsp">saevar [h] saevar [p] is</span>></div>
+</body>
+</html>
