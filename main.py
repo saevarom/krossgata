@@ -15,16 +15,15 @@
 # limitations under the License.
 #
 import os
-import simplejson
+import json
+import webapp2
 
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 
 from krossgata import words, regex_search, perm_search
 
 
-class MainHandler(webapp.RequestHandler):
+class MainHandler(webapp2.RequestHandler):
     def get(self):
 
         path = os.path.join(os.path.dirname(__file__), 'templates','index.html')
@@ -41,13 +40,10 @@ class MainHandler(webapp.RequestHandler):
         if perms:
             pmatches = perm_search(perms)
             d.update(perms=pmatches)
-        self.response.out.write(simplejson.dumps(d))
+        self.response.out.write(json.dumps(d))
 
-def main():
-    application = webapp.WSGIApplication([('/', MainHandler)],
-                                         debug=True)
-    util.run_wsgi_app(application)
-
-
-if __name__ == '__main__':
-    main()
+app = webapp2.WSGIApplication(
+    [
+        ('/', MainHandler),
+    ], 
+    debug=True)

@@ -1,7 +1,7 @@
 <html>
     <head>
         <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAbDsq1WKNoROj-ZGyqQ4o0hRE5teG-u3U1FFRhnuyaKFH_tUAWBTDzV35JQzVwPKq8tpp1xHwJN3vAw"></script>
-        <script type="text/javascript">google.load("jquery", "1.4.2");</script>
+        <script type="text/javascript">google.load("jquery", "1.7.1");</script>
         <script type="text/javascript">
             $(document).ready(function() {
                 var $spinner = $('#spinner');
@@ -60,14 +60,14 @@
         <dt>Orðhlutaleit</dt>
         <dd>Leitarvélin þarf að fá leitarorð sem er sama lengd og orðið sem leitað er að. Ef einhverjir stafir eða orðhlutar í orðinu eru óþekktir þarf að fylla upp í með punktum. Til dæmis finnur leitarorðið "fó.ur" orðin fóður, fórur og fótur. Leitarorðið ".." finnur öll tveggja stafa orð í orðalistanum.</dd>
         <dt>Stafarugl</dt>
-        <dd>Leitarvélin þarf að fá alla stafi orðsins, í hvaða röð sem er. Til dæmis finnur leitarorðið "rðiuf" orðin fiður, fuðri og rifuð. Af tæknilegum ástæðum er ekki hægt að finna stafarugl sem er lengra en 6 stafir.</dd>
+        <dd>Leitarvélin þarf að fá alla stafi orðsins, í hvaða röð sem er. Til dæmis finnur leitarorðið "rðiuf" orðin fiður, fuðri og rifuð. Af tæknilegum ástæðum er ekki hægt að finna stafarugl sem er lengra en 10 stafir.</dd>
     </dl>
     <p>Orðalisti fenginn á: <a href="http://elias.rhi.hi.is/pub/is/ordalisti">http://elias.rhi.hi.is/pub/is/ordalisti</a></p>
 
     <div>
     <p>Orðaleit: <input type="text" id="regex" name="regex" /> "fó.ur" finnur fóður, fórur og fótur. ".." Finnur öll tveggja stafa orð.</p>
     <p>Stafarugl: <input type="text" id="perms" name="perms" /> "rðiuf" finnur fiður, fuðri og rifuð.</p>
-    <p><input type="submit" id="search" value="Leita" /> <img id="spinner" src="images/ajax.gif" style="display:none;" /></p>
+    <p><input type="submit" id="search" value="Leita" /> <img id="spinner" src="static/images/ajax.gif" style="display:none;" /></p>
     </form>
     <div id="results"></div>
     </div>

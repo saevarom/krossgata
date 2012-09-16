@@ -20,12 +20,16 @@ def to_unicode_or_bust(
             obj = unicode(obj, encoding)
     return obj
 
+@timing
 def read_file(filename):
     f = open(filename)
     return [to_unicode_or_bust(l.strip()) for l in list(f)]
 
-words = read_file('wordlist.txt')
+@timing
+def get_words():
+    return read_file('wordlist.txt')
 
+@timing
 def permutations(items, n):
     if n==0: yield []
     else:
@@ -33,6 +37,7 @@ def permutations(items, n):
             for cc in permutations(items[:i]+items[i+1:],n-1):
                 yield [items[i]]+cc
 
+@timing
 def all_perms(str):
     if len(str) <=1:
         yield str
@@ -41,6 +46,7 @@ def all_perms(str):
             for i in range(len(perm)+1):
                 yield perm[:i] + str[0:1] + perm[i:]
 
+@timing
 def regex_search(regex):
     rmatched = []
     errors = []
@@ -54,16 +60,28 @@ def regex_search(regex):
 def perm_search(string):
     pmatched = []
     errors = []
-    if len(string) > 6:
-        errors.append(u"Af tæknilegum ástæðum er ekki hægt að finna stafarugl sem er lengra en 6 stafir.")
+    if len(string) > 10:
+        errors.append(u"Af tæknilegum ástæðum er ekki hægt að finna stafarugl sem er lengra en 10 stafir.")
     else:
         #perms = list(set([u''.join(p) for p in permutations(list(string), len(string))]))
-        perms = list(set(list(all_perms(to_unicode_or_bust(string)))))
+        perms = set(list(all_perms(to_unicode_or_bust(string))))
 
-        for word in words:
-            for p in perms:
-                if p == word:
-                    pmatched.append(word)
+        # way better! 35 milliseconds for 7 letter word!
+        pmatched = list(perms.intersection(words))
+        logging.info(pmatched)
+        #worst
+        #print set(words) & set(perms)
+
+        #best, 18 seconds for 7 letter words, 1.8 seconds for 6 letter word
+        #pmatched = [x for x in words if x in perms]
+
+        #bad, 40 seconds for 7 letter words, 4 seconds for 6 letter word
+        #for word in words:
+        #    for p in perms:
+        #        if p == word:
+        #            pmatched.append(word)
 
     return {'matches':pmatched,'errors':errors}
 
+
+words=get_words()
