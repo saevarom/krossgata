@@ -11,7 +11,8 @@
                         $spinner.show();
                         $.post('/', {
                                 regex: $('#regex').val(),
-                                perms: $('#perms').val()
+                                perms: $('#perms').val(),
+                                which: $('input[name=which]:checked').val()
                             }, function(data){
                                 $results = $('#results').html('');
                                 if(data.perms) {
@@ -43,7 +44,22 @@
                     }
                 });
                 $('.nsp').no_spam();
+                disableInput();
+
+                $('input[type=radio]').click(function(){
+                    disableInput();
+                })
             });
+
+            function disableInput() {
+                $("input[type=radio]").each(function(i,e){
+                    if (! $(this).is(':checked')) {
+                        $(this).siblings('input').attr('disabled', 'disabled');
+                    } else {
+                        $(this).siblings('input').removeAttr('disabled').focus();
+                    }
+                });
+            }
 
 
         </script>
@@ -58,18 +74,17 @@
     <p>Krossgátuleitin býður upp á tvær mismunandi tegundir af leit:</p>
     <dl>
         <dt>Orðhlutaleit</dt>
-        <dd>Leitarvélin þarf að fá leitarorð sem er sama lengd og orðið sem leitað er að. Ef einhverjir stafir eða orðhlutar í orðinu eru óþekktir þarf að fylla upp í með punktum. Til dæmis finnur leitarorðið "fó.ur" orðin fóður, fórur og fótur. Leitarorðið ".." finnur öll tveggja stafa orð í orðalistanum.</dd>
+        <dd>Leitarvélin þarf að fá leitarorð sem er sama lengd og orðið sem leitað er að. Ef einhverjir stafir eða orðhlutar í orðinu eru óþekktir þarf að fylla upp í með punktum. Til dæmis finnur leitarorðið "fó.ur" orðin fónur, fóður, fórur og fótur. Leitarorðið ".." finnur öll tveggja stafa orð í orðalistanum.</dd>
         <dt>Stafarugl</dt>
         <dd>Leitarvélin þarf að fá alla stafi orðsins, í hvaða röð sem er. Til dæmis finnur leitarorðið "rðiuf" orðin fiður, fuðri og rifuð. Af tæknilegum ástæðum er ekki hægt að finna stafarugl sem er lengra en 10 stafir.</dd>
     </dl>
-    <p>Orðalisti fenginn á: <a href="http://elias.rhi.hi.is/pub/is/ordalisti">http://elias.rhi.hi.is/pub/is/ordalisti</a></p>
+    <p>Orðalisti fenginn á: <a href="http://www.ordid.is/gogn/">Ordid.is</a></p>
 
     <div>
-    <p>Orðaleit: <input type="text" id="regex" name="regex" /> "fó.ur" finnur fóður, fórur og fótur. ".." Finnur öll tveggja stafa orð.</p>
-    <p>Stafarugl: <input type="text" id="perms" name="perms" /> "rðiuf" finnur fiður, fuðri og rifuð.</p>
-    <p><input type="submit" id="search" value="Leita" /> <img id="spinner" src="static/images/ajax.gif" style="display:none;" /></p>
-    </form>
-    <div id="results"></div>
+        <p><input type="radio" name="which" value="regex" checked="checked" /> Orðaleit: <input type="text" id="regex" name="regex" /> "fó.ur" finnur fóður, fórur og fótur. ".." Finnur öll tveggja stafa orð.</p>
+        <p><input type="radio" name="which" value="perms"  /> Stafarugl: <input type="text" id="perms" name="perms" /> "rðiuf" finnur furði, fuðri, fiður og rifuð.</p>
+        <p><input type="submit" id="search" value="Leita" /> <img id="spinner" src="static/images/ajax.gif" style="display:none;" /></p>
+        <div id="results"></div>
     </div>
     <hr />
     <div>Höfundur: Sævar Öfjörð Magnússon <<span class="nsp">saevar [h] saevar [p] is</span>><br /><a href="http://github.com/saevarom/krossgata">Kóðinn er á Github.</a></div>

@@ -2,23 +2,8 @@
 import re
 import time
 import logging
+from utils import to_unicode_or_bust, store, retrieve, timing
 
-
-def timing(func):
-    def inside(*args):
-        t1 = time.time()
-        res = func(*args)
-        t2 = time.time()
-        logging.info( '%s took %0.3f ms' % (func.func_name, (t2-t1)*1000.0) )
-        return res
-    return inside
-
-def to_unicode_or_bust(
-    obj, encoding='utf-8'):
-    if isinstance(obj, basestring):
-        if not isinstance(obj, unicode):
-            obj = unicode(obj, encoding)
-    return obj
 
 @timing
 def read_file(filename):
@@ -26,8 +11,18 @@ def read_file(filename):
     return [to_unicode_or_bust(l.strip()) for l in list(f)]
 
 @timing
+def all_words():
+    data = retrieve('ordmyndalisti')
+    if data is not None:
+        return data
+    else:
+        data = to_unicode_or_bust(open('ordmyndalisti.txt', 'r').read())
+        store('ordmyndalisti', data)
+        return data
+
+@timing
 def get_words():
-    return read_file('wordlist.txt')
+    return read_file('ordmyndalisti.txt')
 
 @timing
 def permutations(items, n):
@@ -48,12 +43,24 @@ def all_perms(str):
 
 @timing
 def regex_search(regex):
+    logging.info(regex)
     rmatched = []
     errors = []
     for word in words:
         m = re.match(regex, word)
         if m:
             rmatched.append(m.group(0))
+    bla = regex_search2(regex)
+    logging.info(bla)
+    return {'matches':rmatched,'errors':errors}
+
+@timing
+def regex_search2(regex):
+    logging.info(regex)
+    rmatched = []
+    errors = []
+
+    rmatched = list(set(re.findall(regex, all_words)))
     return {'matches':rmatched,'errors':errors}
 
 @timing
@@ -84,4 +91,5 @@ def perm_search(string):
     return {'matches':pmatched,'errors':errors}
 
 
-words=get_words()
+all_words=all_words()
+words = all_words.split('\n')

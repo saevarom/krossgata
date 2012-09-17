@@ -17,10 +17,12 @@
 import os
 import json
 import webapp2
+import logging
 
 from google.appengine.ext.webapp import template
 
-from krossgata import words, regex_search, perm_search
+from krossgata import words, regex_search2, perm_search
+from utils import to_unicode_or_bust
 
 
 class MainHandler(webapp2.RequestHandler):
@@ -30,14 +32,15 @@ class MainHandler(webapp2.RequestHandler):
         self.response.out.write(template.render(path, {}))
 
     def post(self):
-
-        regex = self.request.get('regex', None) + '$'
+        which = self.request.get('which')
         perms = self.request.get('perms', None)
+        regex = self.request.get('regex', None)
         d = {}
-        if regex:
-            rmatches = regex_search(regex)
+        if which == 'regex':
+            regex = ''.join([r'\b', to_unicode_or_bust(regex), r'\b'])
+            rmatches = regex_search2(regex)
             d.update(regex=rmatches)
-        if perms:
+        if which == 'perms':
             pmatches = perm_search(perms)
             d.update(perms=pmatches)
         self.response.out.write(json.dumps(d))
