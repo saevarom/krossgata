@@ -21,7 +21,7 @@ import logging
 
 from google.appengine.ext.webapp import template
 
-from krossgata import words, regex_search2, perm_search
+from krossgata import regex_search2, perm_search
 from utils import to_unicode_or_bust
 
 
@@ -37,7 +37,7 @@ class MainHandler(webapp2.RequestHandler):
         regex = self.request.get('regex', None)
         d = {}
         if which == 'regex':
-            regex = ''.join([r'\b', to_unicode_or_bust(regex), r'\b'])
+            regex = ''.join([r'\s', to_unicode_or_bust(regex), r'\s'])
             rmatches = regex_search2(regex)
             d.update(regex=rmatches)
         if which == 'perms':

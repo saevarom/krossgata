@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import os
 import time
 import logging
 from utils import to_unicode_or_bust, store, retrieve, timing
@@ -7,7 +8,7 @@ from utils import to_unicode_or_bust, store, retrieve, timing
 
 @timing
 def read_file(filename):
-    f = open(filename)
+    f = open(os.path.join(os.path.dirname(__file__), 'static', filename))
     return [to_unicode_or_bust(l.strip()) for l in list(f)]
 
 @timing
@@ -16,7 +17,9 @@ def all_words():
     if data is not None:
         return data
     else:
-        data = to_unicode_or_bust(open('ordmyndalisti.txt', 'r').read())
+        data1 = to_unicode_or_bust(open(os.path.join(os.path.dirname(__file__), 'ordmyndalisti.txt'), 'r').read())
+        data2 = to_unicode_or_bust(open(os.path.join(os.path.dirname(__file__), 'ordmyndalisti2.txt'), 'r').read())
+        data = data1+data2
         store('ordmyndalisti', data)
         return data
 
